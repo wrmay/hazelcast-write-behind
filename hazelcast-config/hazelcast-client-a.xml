@@ -1,0 +1,35 @@
+<hazelcast-client xmlns="http://www.hazelcast.com/schema/client-config"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://www.hazelcast.com/schema/client-config
+                  https://hazelcast.com/schema/client-config/hazelcast-client-config-3.12.xsd">
+
+
+  <group>
+    <name>A</name>
+  </group>
+
+  <network>
+    <cluster-members>
+      <address>member-a1:5701</address>
+      <address>member-a2:5701</address>
+    </cluster-members>
+<!--    <ssl enabled="true">-->
+<!--      <factory-class-name>com.hazelcast.nio.ssl.OpenSSLEngineFactory</factory-class-name>-->
+<!--      <properties>-->
+<!--        <property name="protocol">TLSv1.2</property>-->
+<!--        <property name="trustCertCollectionFile">/opt/project/hazelcast-config/test.crt</property>-->
+<!--        <property name="keyFile">/opt/project/hazelcast-config/test.key</property>-->
+<!--        <property name="keyCertChainFile">/opt/project/hazelcast-config/test.crt</property>-->
+<!--      </properties>-->
+<!--    </ssl>-->
+  </network>
+
+<!--  <serialization>-->
+<!--    <portable-factories>-->
+<!--      <portable-factory factory-id="1">-->
+<!--        DefaultPortableFactory-->
+<!--      </portable-factory>-->
+<!--    </portable-factories>-->
+<!--  </serialization>-->
+
+</hazelcast-client>

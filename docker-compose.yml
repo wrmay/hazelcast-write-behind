@@ -1,0 +1,66 @@
+---
+version: "3"
+
+services:
+
+  member-a1:
+    container_name: member-a1
+    image: adoptopenjdk/openjdk8:alpine
+    volumes:
+      - ".:/opt/project"
+    depends_on:
+      - hazelcast-mancenter
+    command: >
+      java -cp /opt/project/hazelcast-config:/opt/project/hazelcast-server/target/hazelcast-server-1.0-SNAPSHOT.jar
+      -Dhazelcast.config=/opt/project/hazelcast-config/hazelcast-a.xml
+      com.hazelcast.sample.server.Server
+
+  member-a2:
+    container_name: member-a2
+    image: adoptopenjdk/openjdk8:alpine
+    volumes:
+      - ".:/opt/project"
+    depends_on:
+      - hazelcast-mancenter
+    command: >
+      java -cp /opt/project/hazelcast-config:/opt/project/hazelcast-server/target/hazelcast-server-1.0-SNAPSHOT.jar
+      -Dhazelcast.config=/opt/project/hazelcast-config/hazelcast-a.xml
+      com.hazelcast.sample.server.Server
+
+  client-a:
+    container_name: client-a
+    image: adoptopenjdk/openjdk8:alpine
+    volumes:
+      - ".:/opt/project"
+    depends_on:
+      - hsqldb
+      - member-a1
+      - member-a2
+    command: >
+      java -cp /opt/project/hazelcast-client/target/hazelcast-client-1.0-SNAPSHOT.jar
+      -Dhazelcast.client.config=/opt/project/hazelcast-config/hazelcast-client-a.xml
+      com.hazelcast.sample.client.SimpleClient
+      --count=10000
+      --rate=1
+      --map=merchants
+
+
+  hazelcast-mancenter:
+    container_name: hazelcast-mancenter
+    volumes:
+      - ".:/opt/project"
+    build:
+      context: docker-images/hazelcast-mancenter
+    ports:
+      - 8080:8080
+
+  hsqldb:
+    container_name: hsqldb
+    build:
+      context: docker-images/hsqldb
+    volumes:
+      - ".:/opt/project"
+    ports:
+      - 9001:9001
+    command:
+      java -cp /opt/hsqldb/hsqldb.jar org.hsqldb.server.Server --database.0 file:testdb --dbname.0 testdb
